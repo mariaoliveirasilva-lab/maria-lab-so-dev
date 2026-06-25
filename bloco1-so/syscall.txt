@@ -7,29 +7,30 @@
 # Cole abaixo a linha relevante da saída de:
 # strace echo "ola" 2>&1 | grep write
 
-Saída filtrada:
+Saída filtrada: (1, "ola\n", 4ola
 
 # Anote:
 #   Argumento 1 (file descriptor):
 #   O que está sendo escrito:
 #   Valor de retorno:
 
-fd:
-conteúdo:
-retorno:
+fd: 1
+conteúdo: ola\n
+retorno:4
 
 
 # PARTE B — Programa C com write() direto
 
 # Cole aqui o código de syscall_direto.c que você escreveu:
+#include <unistd.h>
 
-[código-fonte]
-
+int main() {
+    write(1, "ola direto\n", 11);
+    return 0;
+}
 
 # Cole aqui a linha write(...) da saída de strace -o strace.txt ./syscall_direto:
-
-[saída do strace]
-
+write(1, "ola direto\n", 11)
 
 # PARTE C — Questões de síntese
 
@@ -38,11 +39,10 @@ retorno:
 #    de usuário consegue fazer I/O sem executar instruções privilegiadas diretamente.
 
 Resposta 1:
+Um programa de usuário não possui permissão de hardware para acessar dispositivos de I/O diretamente, pois roda no modo de operação não-privilegiado da CPU (Modo Usuário). Para realizar o I/O, o programa precisa solicitar formalmente esse serviço ao sistema operacional através de uma chamada de sistema (system call), como a write(). Essa chamada gera uma interrupção de software que altera o nível de privilégio da CPU para o Modo Kernel, permitindo que o sistema operacional execute as instruções de I/O com segurança em nome do programa e, em seguida, devolva o controle ao Modo Usuário.
 
+# 2. Compare write(fd, buffer, tamanho) com o "programa de canal"
+#    da apresentação: o que os dois têm em comum em termos de
+#    responsabilidades?
 
-# 2. Na apresentação sobre a genealogia do software, vimos que os programas de canal
-#    eram responsáveis por intermediar a transferência de dados entre a memória e os
-#    dispositivos, sem intervenção direta da CPU principal. Qual elemento do sistema 
-#    operacional moderno herda esse papel? 
-
-Resposta 2:
+Resposta 2:Ambos compartilham a responsabilidade de isolar o programador dos detalhes físicos e de baixo nível do hardware, servindo como uma interface de abstração para o transporte de dados. Além disso, tanto a assinatura da função write() quanto um programa de canal precisam definir obrigatoriamente os mesmos três parâmetros fundamentais para uma operação de transferência: o destino/origem do fluxo (representado pelo fd ou pelo identificador do dispositivo), a localização dos dados na memória principal (o buffer ou o endereço de início do canal) e a quantidade exata de informação a ser movimentada (o tamanho em bytes ou o contador de bloco).
