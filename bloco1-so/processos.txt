@@ -6,33 +6,44 @@
 # Cole abaixo a saída de cada comando e anote o que observou.
 
 echo $$
-  PID do shell: 
+  PID do shell: 48
 
-cat /proc/[PID]/status   (substitua [PID] pelo número real)
-  PID:
-  PPID (processo pai):
-  State:
+cat /proc/48/status   (substitua [PID] pelo número real)
+  PID: 48
+  PPID (processo pai): 1
+  State: S (sleeping)
 
-cat /proc/[PID]/stat (campos relevantes)
+cat /proc/48/stat (campos relevantes)
   Campo 2 — nome do executável:
   Campo 3 — estado:
   Campos 14 e 15 — utime / stime:
+48 (sh) S 1 48 48 58624 80 4194304 935 2770 24 156 119 308 126 852 20 0 1 0 3201
+ 6352896 736 18446744073709551615 183251935232 183252980200 274875755984 0 0 0 6
+5536 3670020 1266777851 1 0 0 17 0 0 0 0 0 0 183252985192 183253031388 183253073
+920 274875756396 274875756402 274875756402 274875756528 0
 
 ps aux (primeiras linhas)
-  [cole aqui]
-
+  48 (sh) S 1 48 48 58624 80 4194304 935 2770 24 156 119 308 126 852 20 0 1 0 3201
+ 6352896 736 18446744073709551615 183251935232 183252980200 274875755984 0 0 0 6
+5536 3670020 1266777851 1 0 0 17 0 0 0 0 0 0 183252985192 183253031388 183253073
+920 274875756396 274875756402 274875756402 274875756528 0
 
 # PARTE B — Processo filho
 # Cole a saída dos comandos e responda:
 
 sleep 5m &
-  PID do filho: 
+  PID do filho: 81
 
-cat /proc/[FILHO]/status | grep -E "Pid|PPid|State"
-  [cole aqui]
+cat /proc/81/status | grep -E "Pid|PPid|State"
+  Pid:    81
+PPid:   48
+State: s (sleeping)
 
 ps -o pid,ppid,stat,cmd (antes do kill)
-  [cole aqui]
+State:  S (sleeping)
+Pid:    81
+PPid:   48
+
 
 ps -o pid,ppid,stat,cmd (depois do kill)
   [cole aqui]
